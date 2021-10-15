@@ -1,13 +1,11 @@
 package models
 
-import "time"
-
 type SlotBooking struct {
-	ID       			uint   `gorm:"primaryKey" json:"id_slot_booking"`
-	TanggalPelayanan 	time.Time
-	JamPelayanan 		time.Time
-	KeperluanLayanan	string `gorm:"primaryKey" json:"keperluan_layanan"`
-	Status 				string `gorm:"primaryKey" json:"status"`
-	BankID 				uint `json:"id_bank"`
-	UserID 				uint `json:"id_user"`
+	ID               uint   `gorm:"column:id" json:"id_booking"`
+	TanggalPelayanan string `json:"tanggal_pelayanan"`
+	JamPelayanan     string `json:"jam_pelayanan"`
+	KeperluanLayanan int    `json:"keperluan_layanan"`
+	Status           string `json:"status"`
+	BankID           uint   `json:"id_bank_tujuan"`
+	UserID           uint   `json:"id_user"`
 }

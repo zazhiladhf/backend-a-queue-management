@@ -25,8 +25,20 @@ type AuthHandlerInterface interface {
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var data map[string]string
 
-	if err := c.BodyParser(&data); err != nil {
+	err := c.BodyParser(&data)
+	if err != nil {
 		return err
+	}
+
+	var users models.User
+
+	if data["password"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status":  404,
+			"message": "password kosong",
+			"data": users,
+		})
 	}
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
@@ -38,8 +50,22 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 
 	database.DB.Create(&user)
 
-	return c.JSON(user)
-	
+	if user.Username == "" {
+		c.Status(fiber.StatusNotFound)
+		return c.JSON(fiber.Map{
+			"status":  404,
+			"message": "username kosong",
+			"data": user,
+		})
+	} else {
+		c.Status(fiber.StatusOK)
+		return c.JSON(fiber.Map{
+			"status":  200,
+			"message": "registrasi berhasil",
+			"data": user,
+		})
+	}
+		
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
@@ -56,14 +82,14 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
-			"message": "user not found",
+			"message": "user tidak ditemukan",
 		})
 	}
 
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
-			"message": "incorrect password",
+			"message": "password salah",
 		})
 	}
 
@@ -91,7 +117,9 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	c.Cookie(&cookie)
 
 	return c.JSON(fiber.Map{
+		"status":  200,
 		"message": "login berhasil",
+		"data": user,
 	})
 }
 
