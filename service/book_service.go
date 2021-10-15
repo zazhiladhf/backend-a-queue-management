@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/slonob0y/qms/models"
-	"github.com/slonob0y/qms/repository"
-	"github.com/slonob0y/qms/utils"
+	"qms/models"
+	"qms/repository"
+	"qms/utils"
 )
 
 type BookService struct {
@@ -91,7 +91,7 @@ func (s *BookService) ValidateBookByDay() error {
 		return err
 	}
 
-	if count > 5 {
+	if count > 10 {
 		return errors.New("booking penuh")
 	}
 
@@ -99,14 +99,13 @@ func (s *BookService) ValidateBookByDay() error {
 
 }
 
-func(s *BookService) GetBookById(id string) ([]models.SlotBooking, error) {
+func (s *BookService) GetBookById(id string) ([]models.SlotBooking, error) {
 	book, err := s.bookRepo.GetBookById(id)
 
 	if err != nil {
 		return book, err
 	}
 	fmt.Println(book)
-
 
 	return book, nil
 }

@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"qms/handler"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/slonob0y/qms/handler"
 )
 
 type Routes struct {

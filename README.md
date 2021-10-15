@@ -2,70 +2,28 @@
 
 Goal : Sebagai penyedia layanan bank, kami ingin memberikan nasabah layanan perbankan tanpa harus lama menghabiskan waktu menunggu antrian.
 
-## setup
+Main Developer : Zazhil Adhafi  
+Contributor : Rizqi Pratama, Rifky Tedianto, Luh Gede Dyah Pradnyadari  
 
-1. clone this repository
-2. type `make run` to run the apps
-3. Hit the Server `localhost:8000/`
-4. Unit Test `make coverage`
-5. see coverage all test in html `make coverage-out`
-
-## Prerequisite
-
-To run this program, you will need
-
-### App Dependencies
-
-```$xslt
-- Golang 1.12+
-- Go mod enabled
-```
-
-## How to Run
-
-### Setup App Config
-
-```
-cp .env.example .env
-```
-
-### Run Application
-
-```
-make run
-```
-
-## How to Test
-
-```
-make test
-```
-
-## How to Lint
-
-```
-make lint
-```
-
-## Deployment
-
-### Build
-
-```
-make build
-```
+- [Project BRI QMS](#project-bri-qms)
+  - [Configuration](#configuration)
+  - [API Tables](#api-tables)
+  - [Cara Akses API](#cara-akses-api)
+  - [POST `/login`](#post-login)
+  - [POST `/register`](#post-register)
+  - [POST `/book/create`](#post-bookcreate)
+    - [Booking Berhasil](#booking-berhasil)
+    - [Booking Penuh](#booking-penuh)
+  - [GET `/bank`](#get-bank)
+  - [GET `/bank/detail/1`](#get-bankdetail1)
+  - [DELETE `/book/selesai/3`](#delete-bookselesai3)
+  - [Tech Stack](#tech-stack)
 
 ## Configuration
 
-| NAME        | DESCRIPTION                      | TYPE   | VALUE       |
-| ----------- | -------------------------------- | ------ | ----------- |
-| APP_NAME    | Application name                 | string | alphabet    |
-| APP_PORT    | Application port                 | int    | number      |
-| LOG_LEVEL   | Mode for log level configuration | string | debug/info  |
-| ENVIRONMENT | Application environment          | string | development |
-| JWT_SECRET  | JWT Secret                       | string | alphabet    |
+Didokumentasikan didalam dokumentasi lain.
 
-## Tasks
+## API Tables
 
 We define routes for handling operations:
 
@@ -79,21 +37,23 @@ We define routes for handling operations:
 | GET    | /book/detail/1  | get                 |
 | DELETE | /book/selesai/3 | delete              |
 
+## Cara Akses API
+
 Access API via `http://localhost:8000/{route}`
 
-1. POST `/login`
+## POST `/login`
 
 Authorization: basic auth
 
 Request Body:
 
-```
+``` json
 {"username": "dts2021@tes.com", "password": "dtsitp"}
 ```
 
 Response: status code: 200
 
-```
+```json
 {
     "data":{
         "username": "dts2021@tes.com",
@@ -102,18 +62,18 @@ Response: status code: 200
 }
 ```
 
-2. POST `/register `
+## POST `/register`
 
 Request Body:
 
-```
+```json
 {"username": "dts2021@tes.com", "password": "dtsitp"}
 ```
 
 Response:
 status code : 200
 
-```
+```json
 {
     "data":{
         "username": "dts2021@tes.com",
@@ -122,29 +82,31 @@ status code : 200
 }
 ```
 
-3. POST `/book/create`
+## POST `/book/create`
+
+### Booking Berhasil
 
 Authorization: basic auth
 
 Request Body:
 
-```
+```json
 {
     "id_bank_tujuan":1,
-    "keperluan_layanan:1,
+    "keperluan_layanan":1,
     "id_user":1
 }
 ```
 
 Response: status code: 200
 
-```
+```json
 {
     "msg": "berhasil"
     "data":{
         "id_booking":3,
         "id_bank_tujuan":1,
-        "keperluan_layanan:1,
+        "keperluan_layanan":1,
         "id_user":1,
         "tanggal_pelayanan":"01/08/2021",
         "jam_pelayanan":"09.00-10.00"
@@ -152,40 +114,38 @@ Response: status code: 200
 }
 ```
 
-4. POST `/book/create`
-
-Authorization: basic auth
+### Booking Penuh
 
 Request Body:
 
-```
+```json
 {
     "id_bank_tujuan":2,
-    "keperluan_layanan:2,
+    "keperluan_layanan":2,
     "id_user":2
 }
 ```
 
 Response: status code: 201
 
-```
+```json
 {
     "msg": "booking penuh"
     "data":{
         "id_bank_tujuan":2,
-        "keperluan_layanan:2,
+        "keperluan_layanan":2,
         "id_user":2
     }
 }
 ```
 
-5. GET `/bank`
+## GET `/bank`
 
 Authorization: basic auth
 
 Response: status code: 200
 
-```
+```json
 {
     "msg": "berhasil"
     "data":[{
@@ -201,13 +161,13 @@ Response: status code: 200
 }
 ```
 
-6. GET `/bank/detail/1`
+## GET `/bank/detail/1`
 
 Authorization: basic auth
 
 Response: status code: 200
 
-```
+```json
 {
     "msg": "berhasil"
     "data":{
@@ -221,14 +181,14 @@ Response: status code: 200
 }
 ```
 
-7. DELETE `/book/selesai/3`
+## DELETE `/book/selesai/3`
 
 Authorization: basic auth
 
 Response:
 status code: 200
 
-```
+```json
 {
     "msg": "berhasil"
     "data":{
@@ -236,7 +196,7 @@ status code: 200
 }
 ```
 
-### Tech Stack
+## Tech Stack
 
 - [Golang] - programming language
 - [Fiber] - web framework with zero memory allocation and performance

@@ -3,7 +3,8 @@ package repository
 import (
 	"fmt"
 
-	"github.com/slonob0y/qms/models"
+	"qms/models"
+
 	"gorm.io/gorm"
 )
 
@@ -62,7 +63,7 @@ func (r *BookRepository) FindAllBank() ([]models.Bank, error) {
 	return banks, findResult.Error
 }
 
-func(r *BookRepository) FindByStatus(status string) (models.SlotBooking, error) {
+func (r *BookRepository) FindByStatus(status string) (models.SlotBooking, error) {
 	var book models.SlotBooking
 	findResult := r.db.Where("status = ?", status).First(&book)
 	return book, findResult.Error
@@ -75,7 +76,7 @@ func (r *BookRepository) DeleteBook(id string) error {
 	// 	return err
 	// }
 	if findResult.Error != nil {
-		return  findResult.Error
+		return findResult.Error
 	}
 
 	if findResult.RowsAffected == 0 {
@@ -85,11 +86,10 @@ func (r *BookRepository) DeleteBook(id string) error {
 	return nil
 }
 
-func(r *BookRepository) UpdateBookStatus(book models.SlotBooking, status string) error {
+func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, status string) error {
 	query := `UPDATE slot_bookings SET status = "waiting"`
 	result := r.db.Exec(query, book.Status, status)
 	// fmt.Println("result",result)
-
 
 	if result.Error != nil {
 		return result.Error
@@ -123,7 +123,7 @@ func (r *BookRepository) GetBookByDate(date string) (uint, error) {
 	return count, nil
 }
 
-func(r *BookRepository) GetBookById(id string) ([]models.SlotBooking, error) {
+func (r *BookRepository) GetBookById(id string) ([]models.SlotBooking, error) {
 	// book := models.SlotBooking{}
 	var book []models.SlotBooking
 

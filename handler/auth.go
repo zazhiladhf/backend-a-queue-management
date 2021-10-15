@@ -4,16 +4,17 @@ import (
 	"strconv"
 	"time"
 
+	"qms/database"
+	"qms/models"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/slonob0y/qms/database"
-	"github.com/slonob0y/qms/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const SecretKey = "secret"
 
-type AuthHandler struct {}
+type AuthHandler struct{}
 
 type AuthHandlerInterface interface {
 	Register(c *fiber.Ctx) error
@@ -37,7 +38,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status":  404,
 			"message": "password kosong",
-			"data": users,
+			"data":    users,
 		})
 	}
 
@@ -55,17 +56,17 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status":  404,
 			"message": "username kosong",
-			"data": user,
+			"data":    user,
 		})
 	} else {
 		c.Status(fiber.StatusOK)
 		return c.JSON(fiber.Map{
 			"status":  200,
 			"message": "registrasi berhasil",
-			"data": user,
+			"data":    user,
 		})
 	}
-		
+
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
@@ -119,7 +120,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"status":  200,
 		"message": "login berhasil",
-		"data": user,
+		"data":    user,
 	})
 }
 

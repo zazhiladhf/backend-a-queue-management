@@ -1,13 +1,14 @@
 package main
 
 import (
+	"qms/database"
+	"qms/handler"
+	"qms/repository"
+	"qms/routes"
+	"qms/service"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/slonob0y/qms/database"
-	"github.com/slonob0y/qms/handler"
-	"github.com/slonob0y/qms/repository"
-	"github.com/slonob0y/qms/routes"
-	"github.com/slonob0y/qms/service"
 )
 
 // func Book(c *fiber.Ctx) error {

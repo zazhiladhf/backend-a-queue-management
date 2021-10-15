@@ -3,9 +3,10 @@ package handler
 import (
 	"errors"
 
+	"qms/models"
+	"qms/service"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/slonob0y/qms/models"
-	"github.com/slonob0y/qms/service"
 	"gorm.io/gorm"
 )
 
@@ -42,8 +43,7 @@ func (h *BookHandler) CreateBook(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 			"status":  201,
-			"message":   err.Error(),
-			"data": err,
+			"message": err.Error(),
 		})
 	}
 
@@ -129,12 +129,12 @@ func (h *BookHandler) GetBankById(c *fiber.Ctx) error {
 
 }
 
-func(r *BookHandler) GetBookById(c *fiber.Ctx) error {
+func (r *BookHandler) GetBookById(c *fiber.Ctx) error {
 	// status := c.Query("status")
 	// id := c.Query("id")
 	// status := c.Params("status")
 	id := c.Params("id")
-	
+
 	// var book models.SlotBooking
 
 	// if err := c.BodyParser(&book); err != nil {
@@ -163,11 +163,11 @@ func(r *BookHandler) GetBookById(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"error":  false,
+		"error": false,
 		// "msg":    "success update data",
 		"result": response,
 	})
-	
+
 }
 
 func (m *BookHandler) UpdateStatus(c *fiber.Ctx) error {
