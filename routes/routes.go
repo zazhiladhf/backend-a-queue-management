@@ -26,6 +26,9 @@ func (r *Routes) Setup(app *fiber.App) {
 	app.Get("/user", r.authHandler.User)
 	app.Post("/logout", r.authHandler.Logout)
 
+	//check health server
+	app.Get("/", r.bookHandler.HealthCheck)
+
 	// booking
 	app.Post("/book/create", r.bookHandler.CreateBook)
 	app.Get("/bank", r.bookHandler.GetBank)

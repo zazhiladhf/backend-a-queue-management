@@ -19,7 +19,7 @@ func NewBookRepository(db *gorm.DB) *BookRepository {
 }
 
 type BookRepoInterface interface {
-	CreateBook(book *models.SlotBooking, date, hour string) (int, error)
+	CreateBook(book *models.SlotBooking, date, hour string) (uint, error)
 	FindAllBank() ([]models.Bank, error)
 	FindByStatus(status string) (models.SlotBooking, error)
 	DeleteBook(id string) error
@@ -31,13 +31,13 @@ type BookRepoInterface interface {
 	GetBookById(id string) (models.SlotBooking, error)
 }
 
-func (r *BookRepository) CreateBook(book *models.SlotBooking, date, hour string) (int, error) {
+func (r *BookRepository) CreateBook(book *models.SlotBooking, date, hour string) (uint, error) {
 	result := r.db.Create(book)
 	if result.Error != nil {
-		return int(book.ID), result.Error
+		return book.ID, result.Error
 	}
 
-	return int(book.ID), nil
+	return book.ID, nil
 }
 
 // func(r *BookRepository) CreateBook(book *models.SlotBooking) error {
