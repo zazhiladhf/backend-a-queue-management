@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"qms/database"
 	"qms/handler"
 	"qms/repository"
@@ -59,6 +58,6 @@ func main() {
 	routes := routes.NewRoutes(bookHandler, authHandler)
 	routes.Setup(app)
 
-	// app.Listen(":30488")
-	app.Listen(":" + os.Getenv("APP_PORT"))
+	app.Listen(":8080")
+	// app.Listen(":" + os.Getenv("APP_PORT"))
 }
