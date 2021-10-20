@@ -22,6 +22,7 @@ func NewBookHandler(bookService service.BookServiceInterface) *BookHandler {
 }
 
 type BookHandlerInterface interface {
+	HealthCheck(c *fiber.Ctx) error
 	CreateBook(c *fiber.Ctx) error
 	GetBank(c *fiber.Ctx) error
 	DeleteBook(c *fiber.Ctx) error
@@ -29,6 +30,14 @@ type BookHandlerInterface interface {
 	GetBookById(c *fiber.Ctx) error
 	UpdateStatus(c *fiber.Ctx) error
 	GetBookByUserId(c *fiber.Ctx) error
+}
+
+func (h *BookHandler) HealthCheck(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"server":  true,
+		"message": "Server UP Capt 🚀",
+	})
 }
 
 func (h *BookHandler) CreateBook(c *fiber.Ctx) error {

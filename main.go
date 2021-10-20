@@ -58,5 +58,6 @@ func main() {
 	routes := routes.NewRoutes(bookHandler, authHandler)
 	routes.Setup(app)
 
-	app.Listen(":8000")
+	app.Listen(":8080")
+	// app.Listen(":" + os.Getenv("PORT"))
 }
