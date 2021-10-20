@@ -95,7 +95,7 @@ func (r *BookRepository) DeleteBook(id string) error {
 }
 
 func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, status string) error {
-	query := `UPDATE slot_bookings SET status = "waiting"`
+	query := `UPDATE slot_bookings SET status = "done"`
 	result := r.db.Exec(query, book.Status, status)
 	// fmt.Println("result",result)
 
