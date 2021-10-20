@@ -20,16 +20,18 @@ func NewBookService(bookRepo repository.BookRepoInterface) *BookService {
 }
 
 type BookServiceInterface interface {
-	CreateBook(book models.SlotBooking) (data models.SlotBooking, err error)
+	CreateBook(book *models.SlotBooking) (data *models.SlotBooking, err error)
 	GetBank() ([]models.Bank, error)
 	DeleteBook(status string) error
 	UpdateBookStatus(book models.SlotBooking, status string) (books models.SlotBooking, err error)
 	GetBankById(id string) (models.Bank, error)
+	JoinTable() error
 	ValidateBookByDay() error
-	GetBookById(id string) ([]models.SlotBooking, error)
+	GetBookByUserId(id string) ([]models.SlotBooking, error)
+	GetBookById(id string) (models.SlotBooking, error)
 }
 
-func (s *BookService) CreateBook(book models.SlotBooking) (data models.SlotBooking, err error) {
+func (s *BookService) CreateBook(book *models.SlotBooking) (data *models.SlotBooking, err error) {
 	date := utils.FormatGetDate()
 	hour := utils.FormatGetHour()
 
@@ -38,10 +40,11 @@ func (s *BookService) CreateBook(book models.SlotBooking) (data models.SlotBooki
 
 	result, err := s.bookRepo.CreateBook(book, date, hour)
 	if err != nil {
-		return result, err
+		return nil, err
 	}
+	book.ID = result
 
-	return result, err
+	return book, err
 }
 
 func (s *BookService) GetBank() ([]models.Bank, error) {
@@ -84,6 +87,12 @@ func (s *BookService) GetBankById(id string) (models.Bank, error) {
 	return movies, err
 }
 
+func (s *BookService) JoinTable() error {
+	err := s.bookRepo.JoinTable()
+
+	return err
+}
+
 func (s *BookService) ValidateBookByDay() error {
 	date := utils.FormatGetDate()
 	count, err := s.bookRepo.GetBookByDate(date)
@@ -99,7 +108,18 @@ func (s *BookService) ValidateBookByDay() error {
 
 }
 
-func (s *BookService) GetBookById(id string) ([]models.SlotBooking, error) {
+func (s *BookService) GetBookByUserId(id string) ([]models.SlotBooking, error) {
+	book, err := s.bookRepo.GetBookByUserId(id)
+
+	if err != nil {
+		return book, err
+	}
+	fmt.Println(book)
+
+	return book, nil
+}
+
+func (s *BookService) GetBookById(id string) (models.SlotBooking, error) {
 	book, err := s.bookRepo.GetBookById(id)
 
 	if err != nil {
