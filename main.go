@@ -60,5 +60,5 @@ func main() {
 	routes.Setup(app)
 
 	// app.Listen(":8080")
-	app.Listen(":" + os.Getenv("PORT"))
+	app.Listen(":" + os.Getenv("APP_PORT"))
 }
