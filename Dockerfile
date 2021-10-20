@@ -8,5 +8,7 @@ RUN go build -o main .
 FROM alpine:latest
 RUN mkdir /app
 WORKDIR /app
+ENV APP_PORT=8080
 COPY --from=builder /app/main /app/
+EXPOSE 8080
 CMD ["/app/main"]
