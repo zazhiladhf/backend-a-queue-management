@@ -12,6 +12,6 @@ type SlotBooking struct {
 	UserID           int    `gorm:"column:user_id;not null;index" json:"id_user"`
 	Bank             Bank
 	User             User
-	Deleted          gorm.DeletedAt
+	DeletedAt        gorm.DeletedAt
 	// Banks            []Bank `gorm:"many2many:bank_details;"`
 }

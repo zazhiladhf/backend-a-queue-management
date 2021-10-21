@@ -79,7 +79,7 @@ func (r *BookRepository) FindByStatus(status string) (models.SlotBooking, error)
 
 func (r *BookRepository) DeleteBook(id string) error {
 	var book models.SlotBooking
-	findResult := r.db.Unscoped().Where("id = ?", id).Find(&book)
+	findResult := r.db.Where("id = ?", id).Delete(&book)
 	// if err != nil {
 	// 	return err
 	// }
