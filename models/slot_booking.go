@@ -1,5 +1,7 @@
 package models
 
+import "gorm.io/gorm"
+
 type SlotBooking struct {
 	ID               uint   `gorm:"column:id;primarykey" json:"id_booking"`
 	TanggalPelayanan string `json:"tanggal_pelayanan"`
@@ -10,5 +12,6 @@ type SlotBooking struct {
 	UserID           int    `gorm:"column:user_id;not null;index" json:"id_user"`
 	Bank             Bank
 	User             User
+	Deleted          gorm.DeletedAt
 	// Banks            []Bank `gorm:"many2many:bank_details;"`
 }
