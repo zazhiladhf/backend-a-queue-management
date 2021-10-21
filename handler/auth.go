@@ -83,6 +83,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
+			"status":  404,
 			"message": "user tidak ditemukan",
 		})
 	}
@@ -90,6 +91,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
+			"status":  404,
 			"message": "password salah",
 		})
 	}
