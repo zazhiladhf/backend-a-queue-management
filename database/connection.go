@@ -33,11 +33,11 @@ func Connect() *gorm.DB {
 
 	DB = db
 
-	models.InsertBank(db)
-
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Bank{})
 	db.AutoMigrate(&models.SlotBooking{})
+
+	models.InsertBank(db)
 
 	return db
 }

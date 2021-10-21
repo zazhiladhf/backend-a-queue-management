@@ -26,12 +26,16 @@ func (r *Routes) Setup(app *fiber.App) {
 	app.Get("/user", r.authHandler.User)
 	app.Post("/logout", r.authHandler.Logout)
 
+	//check health server
+	app.Get("/", r.bookHandler.HealthCheck)
+
 	// booking
 	app.Post("/book/create", r.bookHandler.CreateBook)
 	app.Get("/bank", r.bookHandler.GetBank)
 	app.Delete("/book/selesai/:id", r.bookHandler.DeleteBook)
-	app.Get("/bank/detail/:id", r.bookHandler.GetBankById)
-	app.Get("/book/:id/", r.bookHandler.GetBookById)
+	app.Get("/bank/detail/:id", r.bookHandler.GetBankDetailById)
+	app.Get("/book/:id/", r.bookHandler.GetBookByUserId)
 	app.Put("/:status", r.bookHandler.UpdateStatus)
+	app.Get("/book/detail/:id/", r.bookHandler.GetBookById)
 
 }
