@@ -5,11 +5,11 @@ import (
 )
 
 type Bank struct {
-	ID           uint          `gorm:"column:id;primarykey" json:"id_bank_tujuan"`
-	Nama         string        `gorm:"unique;not null;index" json:"nama_bank"`
-	Alamat       string        `gorm:"not null;index" json:"alamat"`
-	Kapasitas    int           `json:"kapasitas"`
-	SlotBookings []SlotBooking `gorm:"many2many:bank_details;"`
+	ID        uint   `gorm:"column:id;primarykey" json:"id_bank_tujuan"`
+	Nama      string `gorm:"unique;not null;index" json:"nama_bank"`
+	Alamat    string `gorm:"not null;index" json:"alamat"`
+	Kapasitas int    `json:"kapasitas"`
+	// SlotBookings []SlotBooking `gorm:"many2many:bank_details;"`
 }
 
 func InsertBank(db *gorm.DB) {

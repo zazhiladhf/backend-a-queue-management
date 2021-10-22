@@ -79,8 +79,9 @@ func (h *BookHandler) CreateBook(c *fiber.Ctx) error {
 	response, err := h.bookService.CreateBook(book)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+			"error":  true,
+			"msg":    err.Error(),
+			"status": 500,
 		})
 	}
 
@@ -133,26 +134,28 @@ func (h *BookHandler) DeleteBook(c *fiber.Ctx) error {
 func (h *BookHandler) GetBankDetailById(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	err := h.bookService.JoinTable()
-	if err != nil {
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-			"status":  201,
-			"message": err.Error(),
-		})
-	}
+	// err := h.bookService.JoinTable()
+	// if err != nil {
+	// 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	// 		"status":  201,
+	// 		"message": err.Error(),
+	// 	})
+	// }
 
 	response, err := h.bookService.GetBankById(id)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+			"error":  true,
+			"msg":    err.Error(),
+			"status": 404,
 		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"error": false,
-		// "msg":    "success update data",
-		"result": response,
+		"error":   false,
+		"message": "berhasil",
+		"result":  response,
+		"status":  200,
 	})
 
 }
@@ -200,7 +203,7 @@ func (r *BookHandler) GetBookByUserId(c *fiber.Ctx) error {
 
 func (m *BookHandler) UpdateStatus(c *fiber.Ctx) error {
 	book := models.SlotBooking{}
-	status := c.Params("status")
+	id := c.Params("id")
 	// var mysqlErr *mysql.MySQLError
 
 	if err := c.BodyParser(&book); err != nil {
@@ -210,7 +213,7 @@ func (m *BookHandler) UpdateStatus(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := m.bookService.UpdateBookStatus(book, status)
+	response, err := m.bookService.UpdateBookStatus(book, id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,

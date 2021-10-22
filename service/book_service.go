@@ -23,9 +23,9 @@ type BookServiceInterface interface {
 	CreateBook(book *models.SlotBooking) (data *models.SlotBooking, err error)
 	GetBank() ([]models.Bank, error)
 	DeleteBook(status string) error
-	UpdateBookStatus(book models.SlotBooking, status string) (books models.SlotBooking, err error)
-	GetBankById(id string) (models.Bank, error)
-	JoinTable() error
+	UpdateBookStatus(book models.SlotBooking, id string) (books models.SlotBooking, err error)
+	GetBankById(id string) ([]models.SlotBooking, error)
+	// JoinTable() error
 	ValidateBookByDay() error
 	GetBookByUserId(id string) ([]models.SlotBooking, error)
 	GetBookById(id string) (models.SlotBooking, error)
@@ -63,35 +63,45 @@ func (s *BookService) DeleteBook(id string) error {
 	return nil
 }
 
-func (s *BookService) UpdateBookStatus(book models.SlotBooking, status string) (books models.SlotBooking, err error) {
+func (s *BookService) UpdateBookStatus(book models.SlotBooking, id string) (books models.SlotBooking, err error) {
 	// update book data
-	err = s.bookRepo.UpdateBookStatus(book, status)
+	err = s.bookRepo.UpdateBookStatus(book, id)
 	if err != nil {
 		return books, err
 	}
 
 	// select book
-	books, err = s.bookRepo.FindByStatus(status)
-	if err != nil {
-		return books, err
-	}
+	// books, err = s.bookRepo.FindByStatus(status)
+	// if err != nil {
+	// 	return books, err
+	// }
 
 	fmt.Println("books", books)
 
 	return books, nil
 }
 
-func (s *BookService) GetBankById(id string) (models.Bank, error) {
-	movies, err := s.bookRepo.GetBankById(id)
+func (s *BookService) GetBankById(id string) ([]models.SlotBooking, error) {
+	// join table
+	// bank, err := s.bookRepo.JoinTable()
+	// if err != nil {
+	// 	return bank, err
+	// }
 
-	return movies, err
+	// get bank
+	bank, err := s.bookRepo.GetBankById(id)
+	if err != nil {
+		return bank, err
+	}
+
+	return bank, nil
 }
 
-func (s *BookService) JoinTable() error {
-	err := s.bookRepo.JoinTable()
+// func (s *BookService) JoinTable() error {
+// 	err := s.bookRepo.JoinTable()
 
-	return err
-}
+// 	return err
+// }
 
 func (s *BookService) ValidateBookByDay() error {
 	date := utils.FormatGetDate()

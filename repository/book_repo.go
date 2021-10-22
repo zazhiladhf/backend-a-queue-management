@@ -21,11 +21,11 @@ func NewBookRepository(db *gorm.DB) *BookRepository {
 type BookRepoInterface interface {
 	CreateBook(book *models.SlotBooking, date, hour string) (uint, error)
 	FindAllBank() ([]models.Bank, error)
-	FindByStatus(status string) (models.SlotBooking, error)
+	// FindByStatus(status string) (models.SlotBooking, error)
 	DeleteBook(id string) error
-	UpdateBookStatus(book models.SlotBooking, status string) error
-	GetBankById(id string) (models.Bank, error)
-	JoinTable() error
+	UpdateBookStatus(book models.SlotBooking, id string) error
+	GetBankById(id string) ([]models.SlotBooking, error)
+	JoinTable() (models.Bank, error)
 	GetBookByDate(date string) (uint, error)
 	GetBookByUserId(id string) ([]models.SlotBooking, error)
 	GetBookById(id string) (models.SlotBooking, error)
@@ -94,9 +94,9 @@ func (r *BookRepository) DeleteBook(id string) error {
 	return nil
 }
 
-func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, status string) error {
-	query := `UPDATE slot_bookings SET status = "done"`
-	result := r.db.Exec(query, book.Status, status)
+func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, id string) error {
+	query := `UPDATE slot_bookings SET status = "done" WHERE id = ?`
+	result := r.db.Exec(query, book.Status, id)
 	// fmt.Println("result",result)
 
 	if result.Error != nil {
@@ -113,23 +113,31 @@ func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, status string
 	return nil
 }
 
-func (r *BookRepository) GetBankById(id string) (models.Bank, error) {
-	var bank models.Bank
+func (r *BookRepository) GetBankById(id string) ([]models.SlotBooking, error) {
+	bank := []models.SlotBooking{}
+	query := `SELECT id, tanggal_pelayanan, jam_pelayanan, keperluan_layanan, status, user_id, bank_id FROM slot_bookings WHERE bank_id = ?`
 
-	findResult := r.db.Where("id = ?", id).First(&bank)
-	return bank, findResult.Error
+	err := r.db.Raw(query, id).Scan(&bank).Error
+	if err != nil {
+		return bank, err
+	}
+	// findResult := r.db.Where("id = ?", id).First(&bank)
+
+	return bank, nil
 }
 
-func (r *BookRepository) JoinTable() error {
-	var bank models.Bank
-	query := `SELECT banks.id, nama, alamat, tanggal_pelayanan, slot_bookings.id, jam_pelayanan FROM banks INNER JOIN slot_bookings ON banks.id=slot_bookings.bank_id`
+func (r *BookRepository) JoinTable() (models.Bank, error) {
+	bank := models.Bank{}
+	// query := `SELECT * FROM banks INNER JOIN slot_bookings ON banks.id = slot_bookings.bank_id`
+	err := r.db.Joins("SlotBooking").Find(&bank)
+	// err := r.db.Model(&bank).Select("banks.nama, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&result{})
 
-	err := r.db.Raw(query).Scan(&bank).Error
+	// err := r.db.Raw(query).Scan(&bank).Error
 	if err != nil {
-		return err
+		return bank, err.Error
 	}
 
-	return nil
+	return bank, nil
 }
 
 func (r *BookRepository) GetBookByDate(date string) (uint, error) {

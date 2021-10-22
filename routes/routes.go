@@ -35,7 +35,7 @@ func (r *Routes) Setup(app *fiber.App) {
 	app.Delete("/book/selesai/:id", r.bookHandler.DeleteBook)
 	app.Get("/bank/detail/:id", r.bookHandler.GetBankDetailById)
 	app.Get("/book/:id/", r.bookHandler.GetBookByUserId)
-	app.Put("/:status", r.bookHandler.UpdateStatus)
+	app.Put("/book/selesai/:id", r.bookHandler.UpdateStatus)
 	app.Get("/book/detail/:id/", r.bookHandler.GetBookById)
 
 }

@@ -10,8 +10,8 @@ type SlotBooking struct {
 	Status           string `json:"status"`
 	BankID           int    `gorm:"column:bank_id;not null;index" json:"id_bank_tujuan"`
 	UserID           int    `gorm:"column:user_id;not null;index" json:"id_user"`
-	Bank             Bank
-	User             User
-	DeletedAt        gorm.DeletedAt
+	// Bank             Bank
+	// User             User
+	DeletedAt gorm.DeletedAt
 	// Banks            []Bank `gorm:"many2many:bank_details;"`
 }
