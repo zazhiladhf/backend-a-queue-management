@@ -21,7 +21,7 @@ func NewBookRepository(db *gorm.DB) *BookRepository {
 type BookRepoInterface interface {
 	CreateBook(book *models.SlotBooking, date, hour string) (uint, error)
 	FindAllBank() ([]models.Bank, error)
-	// FindByStatus(status string) (models.SlotBooking, error)
+	FindByID(id string) (models.SlotBooking, error)
 	DeleteBook(id string) error
 	UpdateBookStatus(book models.SlotBooking, id string) error
 	GetBankById(id string) ([]models.SlotBooking, error)
@@ -71,9 +71,9 @@ func (r *BookRepository) FindAllBank() ([]models.Bank, error) {
 	return banks, nil
 }
 
-func (r *BookRepository) FindByStatus(status string) (models.SlotBooking, error) {
+func (r *BookRepository) FindByID(id string) (models.SlotBooking, error) {
 	var book models.SlotBooking
-	findResult := r.db.Where("status = ?", status).First(&book)
+	findResult := r.db.Where("id = ?", id).First(&book)
 	return book, findResult.Error
 }
 
@@ -95,9 +95,10 @@ func (r *BookRepository) DeleteBook(id string) error {
 }
 
 func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, id string) error {
-	query := `UPDATE slot_bookings SET status = "done" WHERE id = ?`
-	result := r.db.Exec(query, book.Status, id)
+	// query := `UPDATE slot_bookings SET status = "done" WHERE id = ?`
+	// result := r.db.Exec(query, book.Status, id)
 	// fmt.Println("result",result)
+	result := r.db.Model(&book).Where("id = ?", id).Update("status", "done")
 
 	if result.Error != nil {
 		return result.Error

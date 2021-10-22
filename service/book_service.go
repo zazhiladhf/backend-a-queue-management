@@ -71,10 +71,10 @@ func (s *BookService) UpdateBookStatus(book models.SlotBooking, id string) (book
 	}
 
 	// select book
-	// books, err = s.bookRepo.FindByStatus(status)
-	// if err != nil {
-	// 	return books, err
-	// }
+	books, err = s.bookRepo.FindByID(id)
+	if err != nil {
+		return books, err
+	}
 
 	fmt.Println("books", books)
 
