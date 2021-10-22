@@ -9,14 +9,17 @@ Contributor : Rizqi Pratama, Rifky Tedianto, Luh Gede Dyah Pradnyadari
   - [Configuration](#configuration)
   - [API Tables](#api-tables)
   - [Cara Akses API](#cara-akses-api)
-  - [POST `/login`](#post-login)
   - [POST `/register`](#post-register)
+  - [POST `/login`](#post-login)
   - [POST `/book/create`](#post-bookcreate)
     - [Booking Berhasil](#booking-berhasil)
     - [Booking Penuh](#booking-penuh)
   - [GET `/bank`](#get-bank)
   - [GET `/bank/detail/1`](#get-bankdetail1)
-  - [DELETE `/book/selesai/3`](#delete-bookselesai3)
+  - [GET `/book/:id`](#get-bank)
+  - [GET `/book/detail/:id`](#get-bankdetail1)
+  - [PUT `/book/selesai/:id`](#delete-bookselesai3)
+  - [DELETE `/book/selesai/:id`](#delete-bookselesai3)
   - [Tech Stack](#tech-stack)
 
 ## Configuration
@@ -29,38 +32,21 @@ We define routes for handling operations:
 
 | Method | Route           | Action              |
 | ------ | --------------- | ------------------- |
-| POST   | /login          | validate basic auth |
 | POST   | /register       | create account      |
+| POST   | /login          | login to app |
 | POST   | /book/create    | create book         |
-| POST   | /book/create    | create book         |
-| GET    | /bank           | get                 |
-| GET    | /book/detail/1  | get                 |
-| DELETE | /book/selesai/3 | delete              |
+| POST   | /book/create    | create book (full book)         |
+| GET    | /bank           | get list bank                 |
+| GET    | /bank/detail/:id           | get bank detail by BankID                 |
+| GET    | /book/:id  | get all list book detail by user login
+| GET    | /book/detail/:id  | get detail booking by Booking ID                |
+| PUT | /book/selesai/:id | update status to done by Booking ID         |
+| DELETE | /book/selesai/3 | soft delete by Booking ID              |
 
 ## Cara Akses API
 
-Access API via `http://localhost:8000/{route}`
+Access API via `http://localhost:8080/{route}`
 
-## POST `/login`
-
-Authorization: basic auth
-
-Request Body:
-
-``` json
-{"username": "dts2021@tes.com", "password": "dtsitp"}
-```
-
-Response: status code: 200
-
-```json
-{
-    "data":{
-        "username": "dts2021@tes.com",
-    "id_user":1
-    "msg": "login berhasil"
-}
-```
 
 ## POST `/register`
 
@@ -75,10 +61,33 @@ status code : 200
 
 ```json
 {
-    "data":{
-        "username": "dts2021@tes.com",
-    "id_user":1
-    "msg": "registrasi berhasil"
+    "data": {
+        "id_user": 5,
+        "username": "dts2021@tes.com"
+    },
+    "message": "registrasi berhasil",
+    "status": 200
+}
+```
+
+## POST `/login`
+
+Request Body:
+
+``` json
+{"username": "dts2021@tes.com", "password": "dtsitp"}
+```
+
+Response: status code: 200
+
+```json
+{
+    "data": {
+        "id_user": 5,
+        "username": "dts2021@tes.com"
+    },
+    "message": "login berhasil",
+    "status": 200
 }
 ```
 
@@ -86,15 +95,13 @@ status code : 200
 
 ### Booking Berhasil
 
-Authorization: basic auth
-
 Request Body:
 
 ```json
 {
-    "id_bank_tujuan":1,
-    "keperluan_layanan":1,
-    "id_user":1
+    "id_bank_tujuan": 1,
+    "keperluan_layanan": 1,
+    "id_user": 5
 }
 ```
 
@@ -102,15 +109,28 @@ Response: status code: 200
 
 ```json
 {
-    "msg": "berhasil"
-    "data":{
-        "id_booking":3,
-        "id_bank_tujuan":1,
-        "keperluan_layanan":1,
-        "id_user":1,
-        "tanggal_pelayanan":"01/08/2021",
-        "jam_pelayanan":"09.00-10.00"
-    }
+    "data": {
+        "id_booking": 9,
+        "tanggal_pelayanan": "23-10-2021",
+        "jam_pelayanan": "20:50",
+        "keperluan_layanan": 1,
+        "status": "",
+        "id_bank_tujuan": 1,
+        "id_user": 5,
+        "Bank": {
+            "id_bank_tujuan": 0,
+            "nama_bank": "",
+            "alamat": "",
+            "kapasitas": 0
+        },
+        "User": {
+            "id_user": 0,
+            "username": ""
+        },
+        "DeletedAt": null
+    },
+    "message": "berhasil",
+    "status": 200
 }
 ```
 
@@ -120,9 +140,9 @@ Request Body:
 
 ```json
 {
-    "id_bank_tujuan":2,
-    "keperluan_layanan":2,
-    "id_user":2
+    "id_bank_tujuan": 1,
+    "keperluan_layanan": 3,
+    "id_user": 5
 }
 ```
 
@@ -130,69 +150,321 @@ Response: status code: 201
 
 ```json
 {
-    "msg": "booking penuh"
-    "data":{
-        "id_bank_tujuan":2,
-        "keperluan_layanan":2,
-        "id_user":2
-    }
+    "message": "booking penuh",
+    "status": 201
 }
 ```
 
 ## GET `/bank`
 
-Authorization: basic auth
-
 Response: status code: 200
 
 ```json
 {
-    "msg": "berhasil"
-    "data":[{
-        "id_bank":1,
-        "nama_bank":"BANK KCP SOREANG",
-        "alamat":"Jl.Soreang No.180"
-    },
-    {
-        "id_bank":2,
-        "nama_bank":"BANK KCP Banjaran",
-        "alamat":"Jl.Banjaran No.181"
-     }]
+    "data": [
+        {
+            "id_bank_tujuan": 1,
+            "nama_bank": "BANK KCP SOREANG",
+            "alamat": "Jl.Soreang No.180",
+            "kapasitas": 0
+        },
+        {
+            "id_bank_tujuan": 2,
+            "nama_bank": "BANK KCP Banjaran",
+            "alamat": "Jl.Banjaran No.181",
+            "kapasitas": 0
+        }
+    ],
+    "message": "berhasil",
+    "status": 200
 }
 ```
 
-## GET `/bank/detail/1`
+## GET `/bank/detail/:id`
 
-Authorization: basic auth
 
 Response: status code: 200
 
 ```json
 {
-    "msg": "berhasil"
-    "data":{
-        "id_bank":1,
-        "nama_bank":"BANK KCP SOREANG",
-        "alamat":"Jl.Soreang No.180",
-        "tanggal_antrian_saat_ini":"07/08/2021",
-        "no_antrian_saat_ini":20,
-        "waktu_pelayanan":"09.30"
+    "error": false,
+    "message": "berhasil",
+    "result": [
+        {
+            "id_booking": 3,
+            "tanggal_pelayanan": "22-10-2021",
+            "jam_pelayanan": "13:51",
+            "keperluan_layanan": 2,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 2,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 6,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "13:51",
+            "keperluan_layanan": 2,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 2,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 8,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "13:51",
+            "keperluan_layanan": 3,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 2,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 9,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 1,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 1,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 12,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 2,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 5,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 13,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 1,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 5,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        }
+    ],
+    "status": 200
+}
+```
+
+## GET `/book/:id`
+
+Response: status code: 200
+
+```json
+{
+    "error": false,
+    "result": [
+        {
+            "id_booking": 11,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 2,
+            "status": "",
+            "id_bank_tujuan": 2,
+            "id_user": 5,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 12,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 2,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 5,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        },
+        {
+            "id_booking": 13,
+            "tanggal_pelayanan": "23-10-2021",
+            "jam_pelayanan": "20:50",
+            "keperluan_layanan": 1,
+            "status": "",
+            "id_bank_tujuan": 1,
+            "id_user": 5,
+            "Bank": {
+                "id_bank_tujuan": 0,
+                "nama_bank": "",
+                "alamat": "",
+                "kapasitas": 0
+            },
+            "User": {
+                "id_user": 0,
+                "username": ""
+            },
+            "DeletedAt": null
+        }
+    ]
+}
+```
+
+## GET `/book/detail/:id`
+
+Response: status code: 200
+
+```json
+{
+    "error": false,
+    "result": {
+        "id_booking": 5,
+        "tanggal_pelayanan": "23-10-2021",
+        "jam_pelayanan": "13:51",
+        "keperluan_layanan": 1,
+        "status": "",
+        "id_bank_tujuan": 2,
+        "id_user": 2,
+        "Bank": {
+            "id_bank_tujuan": 0,
+            "nama_bank": "",
+            "alamat": "",
+            "kapasitas": 0
+        },
+        "User": {
+            "id_user": 0,
+            "username": ""
+        },
+        "DeletedAt": null
     }
 }
 ```
 
-## DELETE `/book/selesai/3`
+## PUT `/book/selesai/:id`
 
-Authorization: basic auth
+Request Body:
 
-Response:
-status code: 200
+``` json
+{
+    "id_booking" : 2
+}
+```
+
+Response: status code: 200
 
 ```json
 {
-    "msg": "berhasil"
-    "data":{
-        "id_booking":3}
+    "error": false,
+    "msg": "success update data",
+    "result": {
+        "id_booking": 2,
+        "tanggal_pelayanan": "23-10-2021",
+        "jam_pelayanan": "20:50",
+        "keperluan_layanan": 3,
+        "status": "done",
+        "id_bank_tujuan": 2,
+        "id_user": 1,
+        "Bank": {
+            "id_bank_tujuan": 0,
+            "nama_bank": "",
+            "alamat": "",
+            "kapasitas": 0
+        },
+        "User": {
+            "id_user": 0,
+            "username": ""
+        },
+        "DeletedAt": null
+    }
+}
+```
+
+## DELETE `/book/selesai/:id`
+
+Response:
+status code: 201
+
+```json
+{
+    "message": "berhasil",
+    "status": 201
 }
 ```
 
