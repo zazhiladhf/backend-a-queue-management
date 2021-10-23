@@ -27,6 +27,7 @@ type BookServiceInterface interface {
 	GetBankById(id string) ([]models.SlotBooking, error)
 	// JoinTable() error
 	ValidateBookByDay() error
+	ValidateBookByToday() error
 	GetBookByUserId(id string) ([]models.SlotBooking, error)
 	GetBookById(id string) (models.SlotBooking, error)
 }
@@ -112,6 +113,17 @@ func (s *BookService) ValidateBookByDay() error {
 
 	if count > 10 {
 		return errors.New("booking penuh")
+	}
+
+	return nil
+
+}
+
+func (s *BookService) ValidateBookByToday() error {
+	date := utils.FormatGetToday()
+	_, err := s.bookRepo.GetBookByDate(date)
+	if err != nil {
+		return err
 	}
 
 	return nil

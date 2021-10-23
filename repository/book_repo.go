@@ -27,6 +27,7 @@ type BookRepoInterface interface {
 	GetBankById(id string) ([]models.SlotBooking, error)
 	JoinTable() (models.Bank, error)
 	GetBookByDate(date string) (uint, error)
+	// GetBookByToday(date string) (uint, error)
 	GetBookByUserId(id string) ([]models.SlotBooking, error)
 	GetBookById(id string) (models.SlotBooking, error)
 }
@@ -116,7 +117,7 @@ func (r *BookRepository) UpdateBookStatus(book models.SlotBooking, id string) er
 
 func (r *BookRepository) GetBankById(id string) ([]models.SlotBooking, error) {
 	bank := []models.SlotBooking{}
-	query := `SELECT id, tanggal_pelayanan, jam_pelayanan, keperluan_layanan, status, user_id, bank_id FROM slot_bookings WHERE bank_id = ?`
+	query := `SELECT * FROM slot_bookings WHERE deleted_at IS NULL AND bank_id = ?;`
 
 	err := r.db.Raw(query, id).Scan(&bank).Error
 	if err != nil {
@@ -152,6 +153,18 @@ func (r *BookRepository) GetBookByDate(date string) (uint, error) {
 
 	return count, nil
 }
+
+// func (r *BookRepository) GetBookByToday(date string) (uint, error) {
+// 	var count uint
+// 	query := `SELECT COUNT(*) FROM slot_bookings where tanggal_pelayanan = ?`
+
+// 	err := r.db.Raw(query, date).Scan(&count).Error
+// 	if err != nil {
+// 		return count, err
+// 	}
+
+// 	return count, nil
+// }
 
 func (r *BookRepository) GetBookByUserId(id string) ([]models.SlotBooking, error) {
 	// book := models.SlotBooking{}

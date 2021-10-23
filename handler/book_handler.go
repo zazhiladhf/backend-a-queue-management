@@ -133,8 +133,24 @@ func (h *BookHandler) DeleteBook(c *fiber.Ctx) error {
 
 func (h *BookHandler) GetBankDetailById(c *fiber.Ctx) error {
 	id := c.Params("id")
+	// book := &models.SlotBooking{}
+	// err := c.BodyParser(book)
+	// if err != nil {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// 		"error": true,
+	// 		"msg":   err.Error(),
+	// 	})
+	// }
 
 	// err := h.bookService.JoinTable()
+	// if err != nil {
+	// 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	// 		"status":  201,
+	// 		"message": err.Error(),
+	// 	})
+	// }
+
+	// err = h.bookService.ValidateBookByToday()
 	// if err != nil {
 	// 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 	// 		"status":  201,

@@ -24,7 +24,7 @@ func Connect() *gorm.DB {
 	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	// For LocalDB Developmen
-	// dsn := "user:password@tcp(localhost:3306)/database"
+	// dsn := "root:74712331@tcp(localhost:3306)/project"
 	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {

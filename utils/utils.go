@@ -15,6 +15,12 @@ func FormatGetDate() string {
 	return tomorrow
 }
 
+func FormatGetToday() string {
+	today := today.Format("02-01-2006")
+
+	return today
+}
+
 func FormatGetHour() string {
 	hr, min, _ := today.Clock()
 	hour := strconv.Itoa(hr) + ":" + strconv.Itoa(int(min))
