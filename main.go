@@ -11,28 +11,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-// func Book(c *fiber.Ctx) error {
-// 	book := models.SlotBooking{
-// 		ID:               1,
-// 		TanggalPelayanan: time.Now(),
-// 		JamPelayanan:     time.Now(),
-// 		KeperluanLayanan: 1,
-// 		Status:           "done",
-// 		BankID:           1,
-// 		UserID:           1,
-// 	}
-// 	return c.JSON(book)
-// }
-
-// func PostBook(c *fiber.Ctx) error {
-// 	book := &models.SlotBooking{}
-
-// 	if err := c.BodyParser(book); err != nil {
-// 		c.Status(403).JSON(err)
-// 	}
-// 	return c.JSON(book)
-// }
-
 func main() {
 
 	//set up connection
